@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nineeightarea</title>
+  <link rel="stylesheet" href="CSS/Gallery.css">
+ </head>
+ <body>
+<!-- Foto/Image 16.9 = Banner/Header -->
+  <div class="slider">
+   <img id="img-1" src="images/header1.jpg" alt="See You">
+   <img id="img-2" src="images/header2.jpg" alt="See You">
+   <img id="img-3" src="images/header3.jpg" alt="See You">
+  </div>
+  <div class="navigation-button"> <span class="dot active" onclick="changeSlide(0)"></span> <span class="dot" onclick="changeSlide(1)"></span> <span class="dot" onclick="changeSlide(2)"></span>
+  </div>
+  <div class="music-player">
+   <audio id="myAudio" controls>
+    <source src="songs/Sheila-On-7-Kita.mp3" type="audio/mpeg">
+   </audio>
+  </div>
+  <div class="x-gallery">
+   <div class="xg-container">
+    <div class="xg-loader">
+     <div class="xg-loader-text">
+      loading to display photos...
+     </div>
+    </div>
+    <div class="xg-img-preview">
+    </div>
+   </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  <script>
+  var currentImg = 2; // Atur default ke gambar kedua (indeks 1)
+  var imgs = document.querySelectorAll('.slider img');
+  var dots = document.querySelectorAll('.dot');
+  var interval = 5000;
+  var timer;
+
+  timer = setInterval(changeSlide, interval);
+
+  function changeSlide(n) {
+    clearInterval(timer); // Hentikan interval saat ada interaksi pengguna
+    for (var i = 0; i < imgs.length; i++) {
+      imgs[i].style.opacity = 0;
+      dots[i].classList.remove('active');
+    }
+
+    if (n !== undefined) {
+      currentImg = n;
+    } else {
+      currentImg = (currentImg + 2) % imgs.length;
+    }
+
+    imgs[currentImg].style.opacity = 2;
+    dots[currentImg].classList.add('active');
+
+    timer = setInterval(changeSlide, interval); // Mulai interval kembali setelah perubahan gambar
+  }
+
+  // Tambahkan event listener untuk menggeser ke gambar sebelumnya atau berikutnya saat gambar diklik
+  imgs.forEach((img, index) => {
+    img.addEventListener('click', function() {
+      changeSlide(index);
+    });
+  });
+
+  function calculateDays(today, eventDate) {
+    const difference = eventDate.getTime() - today.getTime();
+    return Math.ceil(difference / (1000 * 3600 * 24)); // Konversi ke hari
+  }
+
+  // Autoplay music
+  var myAudio = document.getElementById("myAudio");
+  var isMusicPlaying = localStorage.getItem("isMusicPlaying");
+  if (isMusicPlaying === "true") {
+    myAudio.autoplay = true;
+  } else {
+    myAudio.autoplay = false;
+  }
+
+  myAudio.onplay = function() {
+    localStorage.setItem("isMusicPlaying", "true");
+  }
+
+  myAudio.onpause = function() {
+    localStorage.setItem("isMusicPlaying", "false");
+  }
+</script>
+ <script src="js/main.js"></script>
+ </body>
+</html>
